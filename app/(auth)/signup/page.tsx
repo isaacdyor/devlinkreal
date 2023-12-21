@@ -73,7 +73,7 @@ export default function Login({
             required
           />
           <Button variant="default" className="w-full">
-            Sign up
+            Sign poop
           </Button>
           {searchParams?.message && (
             <p className="mt-4 p-4 bg-foreground/10 text-foreground text-center">

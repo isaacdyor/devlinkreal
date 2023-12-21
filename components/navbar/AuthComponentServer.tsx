@@ -1,10 +1,10 @@
-import Link from "next/link";
 import React from "react";
-import { Button } from "../ui/button";
 import { createClient } from "@/utils/supabase/server";
-import LogoutButton from "./AuthComponentClient";
 import { cookies } from "next/headers";
 import AuthComponentClient from "./AuthComponentClient";
+import { redirect } from "next/navigation";
+
+export const revalidate = 0;
 
 const AuthComponent = async () => {
   const supabase = createClient(cookies());
@@ -15,7 +15,7 @@ const AuthComponent = async () => {
 
   supabase.auth.onAuthStateChange((event, session) => {
     if (event === "SIGNED_OUT") {
-      // rebuild the component
+      redirect("/login");
     }
   });
 

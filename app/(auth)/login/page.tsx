@@ -1,92 +1,120 @@
-import { cookies } from "next/headers";
-import { createClient } from "@/utils/supabase/server";
-import { redirect } from "next/navigation";
-import Image from "next/image";
-import Logo from "/public/logo.png";
+"use client";
+
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+
+import { Input } from "@/components/ui/input";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import React from "react";
 import SocialButton from "@/components/auth/SocialButton";
+import { createClient } from "@/utils/supabase/client";
+import { redirect, useRouter } from "next/navigation";
+import Link from "next/link";
 
-export default function Login({
-  searchParams,
-}: {
-  searchParams: { message: string };
-}) {
-  const signIn = async (formData: FormData) => {
-    "use server";
+const registerSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(6).max(100),
+});
 
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
-    const supabase = createClient(cookies());
+type Input = z.infer<typeof registerSchema>;
 
+export default function Home() {
+  const supabase = createClient();
+  const router = useRouter();
+
+  const form = useForm<Input>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  const submit = async (data: Input) => {
+    console.log(data);
     const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
+      email: data.email,
+      password: data.password,
     });
 
     if (error) {
-      return redirect("/login?message=Could not authenticate user");
+      return router.push("/login?message=Could not authenticate user");
     }
+    router.refresh();
+    router.push("/");
+  };
 
-    return redirect("/");
+  const onSubmit = (data: Input) => {
+    submit(data).catch(console.error);
   };
 
   return (
-    <div className="flex justify-center">
-      <div className="auth max-w-xl w-full border-2 border-border p-8 rounded-xl mt-12">
-        <Image
-          src={Logo}
-          alt="Spark Royalty Logo"
-          width={220}
-          height={220}
-          className="pb-6 h-auto w-auto"
-          priority
-        />
-        <SocialButton provider={"google"} />
-        <SocialButton provider={"github"} />
-        <hr className="border-border my-4" />
+    <>
+      <SocialButton provider={"google"} />
+      <SocialButton provider={"github"} />
+      <hr className="border-border my-4" />
+      <Form {...form}>
         <form
+          onSubmit={form.handleSubmit(onSubmit)}
           className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-muted-foreground"
-          action={signIn}
         >
-          <label className="text-sm" htmlFor="email">
-            Email Address
-          </label>
-          <input
-            className="rounded-md px-4 py-2 bg-background border outline-ring border-border mb-4 placeholder:text-sm"
+          <FormField
+            control={form.control}
             name="email"
-            placeholder="Your email address"
-            required
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-muted-foreground">
+                  Email Address
+                </FormLabel>
+                <FormControl>
+                  <Input placeholder="Your email address" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-          <label className="text-sm" htmlFor="password">
-            Password
-          </label>
-          <input
-            className="rounded-md px-4 py-2 border bg-background border-border outline-ring mb-6 placeholder:text-sm"
-            type="password"
+          <FormField
+            control={form.control}
             name="password"
-            placeholder="Your password"
-            required
-            autoComplete="current-password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-muted-foreground">
+                  Password
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Your password"
+                    type="password"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-          <Button variant="default" className="w-full">
-            Sign in
+
+          <Button variant="default" className="w-full my-4" type="submit">
+            Sign poop
           </Button>
-          {searchParams?.message && (
-            <p className="mt-4 p-4 bg-foreground/10 text-foreground text-center">
-              {searchParams.message}
-            </p>
-          )}
         </form>
+      </Form>
 
-        <p className="text-muted-foreground underline text-center text-sm pt-8">
-          <Link href="/forgot-password">Forgot your password?</Link>
-        </p>
+      <p className="text-muted-foreground underline text-center text-sm pt-4">
+        <Link href="/forgot-password">Forgot your password?</Link>
+      </p>
 
-        <p className="text-muted-foreground underline text-center text-sm py-2">
-          <Link href="/signup">Don't have an account? Sign up</Link>
-        </p>
-      </div>
-    </div>
+      <p className="text-muted-foreground underline text-center text-sm py-2">
+        <Link href="/signup">Don't have an account? Sign up</Link>
+      </p>
+    </>
   );
 }
