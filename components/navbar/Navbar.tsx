@@ -1,13 +1,9 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Logo from "/public/logo.png";
 import { XMarkIcon, Bars3Icon } from "@heroicons/react/24/solid";
-
-import { Button } from "../ui/button";
-import AuthComponent from "./AuthComponent";
-import { createClient } from "@/utils/supabase/client";
 
 const Navbar: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -22,23 +18,17 @@ const Navbar: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     setMenuOpen(!menuOpen);
   };
 
-  const supabase = createClient();
-
-  useEffect(() => {
-    const getData = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      console.log(user);
-    };
-
-    getData();
-  }, []);
-
   return (
     <div className="flex items-center justify-between p-3 border-b border-b-border">
       <Link href={"/"} className="shrink-0 px-4">
-        <Image src={Logo} alt="Spark Royalty Logo" width={250} height={250} />
+        <Image
+          src={Logo}
+          alt="Spark Royalty Logo"
+          width={250}
+          height={250}
+          priority
+          className="w-auto h-auto"
+        />
       </Link>
       <div
         className={`flex items-center grow md:visible h-[calc(100vh-71.48px)] md:h-auto justify-start flex-col md:justify-end md:flex-row absolute md:static top-[71.5px]  right-0 w-full  ${

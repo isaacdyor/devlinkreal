@@ -38,7 +38,8 @@ export default function ForgotPassword({
           alt="Spark Royalty Logo"
           width={220}
           height={220}
-          className="pb-6"
+          className="pb-6 h-auto w-auto"
+          priority
         />
         <form
           className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-muted-foreground"

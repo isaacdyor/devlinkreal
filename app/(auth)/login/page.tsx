@@ -39,7 +39,8 @@ export default function Login({
           alt="Spark Royalty Logo"
           width={220}
           height={220}
-          className="pb-6"
+          className="pb-6 h-auto w-auto"
+          priority
         />
         <SocialButton provider={"google"} />
         <SocialButton provider={"github"} />
@@ -66,6 +67,7 @@ export default function Login({
             name="password"
             placeholder="Your password"
             required
+            autoComplete="current-password"
           />
           <Button variant="default" className="w-full">
             Sign in
