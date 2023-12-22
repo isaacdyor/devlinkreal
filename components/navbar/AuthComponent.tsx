@@ -1,15 +1,19 @@
-"use client";
-
 import React from "react";
+import { createClient } from "@/utils/supabase/server";
+import { cookies } from "next/headers";
+import ProfileButton from "./ProfileButton";
+import Link from "next/link";
 import { Button } from "../ui/button";
 
-import Link from "next/link";
-import { User } from "@supabase/supabase-js";
-import ProfileButton from "./ProfileButton";
+const AuthComponent = async () => {
+  const supabase = createClient(cookies());
 
-const LogoutButton: React.FC<{ user: User | null }> = ({ user }) => {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   return user ? (
-    <ProfileButton user={user} />
+    <ProfileButton user={user!} />
   ) : (
     <>
       <Link href={"/login"} className="md:px-1 w-full md:w-auto">
@@ -26,4 +30,4 @@ const LogoutButton: React.FC<{ user: User | null }> = ({ user }) => {
   );
 };
 
-export default LogoutButton;
+export default AuthComponent;

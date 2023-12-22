@@ -1,72 +1,70 @@
-import { cookies } from "next/headers";
-import { createClient } from "@/utils/supabase/server";
-import { redirect } from "next/navigation";
-import Image from "next/image";
-import Logo from "/public/logo.png";
+"use client";
+
 import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+
+import { Input } from "@/components/ui/input";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import React from "react";
+import Link from "next/link";
+import { forgotPassword, updatePassword } from "../actions";
+
+const registerSchema = z.object({
+  password: z.string().min(6).max(100),
+});
+
+export type NewPasswordInput = z.infer<typeof registerSchema>;
 
 export default function NewPassword({
   searchParams,
 }: {
   searchParams: { message: string; code: string };
 }) {
-  const updatePassword = async (formData: FormData) => {
-    "use server";
+  const form = useForm<NewPasswordInput>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: {
+      password: "",
+    },
+  });
 
-    const code = searchParams?.code;
-
-    const password = formData.get("password") as string;
-    const supabase = createClient(cookies());
-
-    if (code) {
-      await supabase.auth.exchangeCodeForSession(code);
-    }
-
-    const { error } = await supabase.auth.updateUser({ password });
-
-    if (error) {
-      console.log(error);
-      return redirect("/new-password?message=Could not reset password");
-    }
-
-    return redirect("/new-password?message=Successfully reset password");
+  const onSubmitHandler = (data: NewPasswordInput) => {
+    const code = searchParams.code;
+    updatePassword(data, code).catch(console.error);
   };
 
   return (
-    <div className="flex justify-center">
-      <div className="auth max-w-xl w-full border-2 border-border p-8 rounded-xl mt-12">
-        <Image
-          src={Logo}
-          alt="Spark Royalty Logo"
-          width={220}
-          height={220}
-          className="pb-6 h-auto w-auto"
-          priority
-        />
-        <form
-          className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-muted-foreground"
-          action={updatePassword}
-        >
-          <label className="text-sm" htmlFor="password">
-            New password
-          </label>
-          <input
-            className="rounded-md px-4 py-2 bg-inherit border border-border outline-ring mb-4 placeholder:text-sm"
-            type="password"
-            name="password"
-            placeholder="New password"
-            required
-          />
-          <Button variant="default" className="w-full">
-            Update Password
-          </Button>
-          {searchParams?.message && (
-            <p className="mt-4 p-4 bg-foreground/10 text-foreground text-center">
-              {searchParams.message}
-            </p>
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmitHandler)}
+        className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-muted-foreground"
+      >
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-muted-foreground">Password</FormLabel>
+              <FormControl>
+                <Input placeholder="Your password" type="password" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
           )}
-        </form>
-      </div>
-    </div>
+        />
+
+        <Button variant="default" className="w-full my-4" type="submit">
+          Update Password
+        </Button>
+      </form>
+    </Form>
   );
 }
