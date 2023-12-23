@@ -17,12 +17,11 @@ export const signIn = async (data: SignupInput) => {
     email: data.email,
     password: data.password,
   });
-
   if (error) {
-    return redirect("/login?message=Could not authenticate user");
+    return {
+      error: error.message,
+    };
   }
-
-  return redirect("/");
 };
 
 export const signUp = async (data: SignupInput) => {
@@ -37,10 +36,11 @@ export const signUp = async (data: SignupInput) => {
   });
 
   if (error) {
-    return redirect("/login?message=Could not authenticate user");
+    return {
+      error: error.message,
+    };
   }
-
-  return redirect("/");
+  // TODO: return success message
 };
 
 export const forgotPassword = async (data: ForgotPasswordInput) => {
@@ -51,14 +51,11 @@ export const forgotPassword = async (data: ForgotPasswordInput) => {
   });
 
   if (error) {
-    return redirect("/forgot-password?message=Could not send email");
+    return {
+      error: error.message,
+    };
   }
-
-  if (error) {
-    return redirect("/login?message=Could not authenticate user");
-  }
-
-  return redirect("/");
+  // TODO: return success message
 };
 
 export const updatePassword = async (
@@ -74,11 +71,9 @@ export const updatePassword = async (
   const { error } = await supabase.auth.updateUser({ password: data.password });
 
   if (error) {
-    return redirect("/forgot-password?message=Could not send email");
-  }
-
-  if (error) {
-    return redirect("/login?message=Could not authenticate user");
+    return {
+      error: error.message,
+    };
   }
 
   return redirect("/");

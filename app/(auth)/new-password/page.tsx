@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { forgotPassword, updatePassword } from "../actions";
 
@@ -29,22 +29,25 @@ export default function NewPassword({
 }: {
   searchParams: { message: string; code: string };
 }) {
+  const [error, setError] = useState<string | null>(null);
   const form = useForm<NewPasswordInput>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
       password: "",
     },
   });
-
-  const onSubmitHandler = (data: NewPasswordInput) => {
+  const onSubmit = async (data: NewPasswordInput) => {
     const code = searchParams.code;
-    updatePassword(data, code).catch(console.error);
+    const result = await updatePassword(data, code);
+    if (result?.error) {
+      setError(result.error);
+    }
   };
 
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmitHandler)}
+        onSubmit={form.handleSubmit(onSubmit)}
         className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-muted-foreground"
       >
         <FormField
@@ -60,7 +63,13 @@ export default function NewPassword({
             </FormItem>
           )}
         />
-
+        {error && (
+          <div className="p-3 mt-3 rounded-md bg-destructive/10 border border-destructive">
+            <p className="text-sm text-center text-destructive font-medium">
+              {error}
+            </p>
+          </div>
+        )}
         <Button variant="default" className="w-full my-4" type="submit">
           Update Password
         </Button>
