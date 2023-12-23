@@ -59,7 +59,11 @@ export const SignUpForm: React.FC<{
                   Email Address
                 </FormLabel>
                 <FormControl>
-                  <Input placeholder="Your email address" {...field} />
+                  <Input
+                    placeholder="Your email address"
+                    {...field}
+                    autoComplete="on"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -77,6 +81,7 @@ export const SignUpForm: React.FC<{
                   <Input
                     placeholder="Your password"
                     type="password"
+                    autoComplete="on"
                     {...field}
                   />
                 </FormControl>
@@ -84,13 +89,6 @@ export const SignUpForm: React.FC<{
               </FormItem>
             )}
           />
-          {error && (
-            <div className="p-3 mt-3 rounded-md bg-destructive/10 border border-destructive">
-              <p className="text-sm text-center text-destructive font-medium">
-                {error}
-              </p>
-            </div>
-          )}
           {success && (
             <div className="p-3 mt-3 rounded-md bg-secondary/50 border border-border">
               <p className="text-sm text-center text-muted-foreground font-medium">
@@ -101,6 +99,13 @@ export const SignUpForm: React.FC<{
           <Button variant="default" className="w-full my-3" type="submit">
             {button}
           </Button>
+          {error && (
+            <div className="p-3 mt-1 mb-4 rounded-md bg-destructive/10 border border-destructive">
+              <p className="text-sm text-center text-destructive font-medium">
+                {error}
+              </p>
+            </div>
+          )}
         </form>
       </Form>
     </>

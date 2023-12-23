@@ -28,7 +28,6 @@ export default function Login() {
       <p className="text-muted-foreground underline text-center text-sm py-2">
         <Link href="/signup">Already have an account? Sign in</Link>
       </p>
-      {error && <p className="text-red-500">{error}</p>}
     </>
   );
 }

@@ -86,7 +86,7 @@ export default function SignUpForm() {
         </form>
       </Form>
       <Link href="/signup">
-        <p className="text-muted-foreground underline text-center text-sm pt-8 pb-2">
+        <p className="text-muted-foreground underline text-center text-sm pt-4 pb-2">
           Already have an account? Sign in
         </p>
       </Link>

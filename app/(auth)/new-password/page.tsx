@@ -15,8 +15,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useState } from "react";
-import Link from "next/link";
-import { forgotPassword, updatePassword } from "../actions";
+import { updatePassword } from "../actions";
 
 const registerSchema = z.object({
   password: z.string().min(6).max(100),
