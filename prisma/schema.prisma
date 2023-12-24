@@ -1,0 +1,73 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  email     String   @unique
+  name      String
+  password  String
+  role      String
+  skills    String[]
+  bio       String
+  github    String?
+  linkedin  String?
+  website   String?
+  profilePic String?
+
+  pitchedProjects Project[] @relation("pitchedProjects")
+  collaboratedProjects Project[] @relation("collaboratedProjects")
+  
+  comments Comment[]
+}
+
+enum ProjectStatus {
+  PLANNING
+  BUILDING
+  COMPLETED
+}
+
+model Project {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  title      String
+  description String
+  repo      String?
+  status    ProjectStatus
+  image     String?
+  techStack String[]
+
+  skillsNeeded String[]
+  skillsProvided String[]
+
+  creatorId String
+  creator   User     @relation("pitchedProjects", fields: [creatorId], references: [id])
+
+  collaborators User[] @relation("collaboratedProjects")
+
+  comments Comment[]
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  content   String
+
+  userId String
+  author   User     @relation(fields: [userId], references: [id])
+
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id])
+}

@@ -19,13 +19,13 @@ const Navbar: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   };
 
   return (
-    <div className="flex items-center justify-between p-3 border-b border-b-border">
+    <div className="flex items-center justify-between p-1 border-b border-b-border">
       <Link href={"/"} className="shrink-0 px-4">
         <Image
           src={Logo}
           alt="Spark Royalty Logo"
-          width={250}
-          height={250}
+          width={175}
+          height={175}
           priority
           className="w-auto h-auto"
         />
