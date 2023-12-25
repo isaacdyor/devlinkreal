@@ -19,7 +19,7 @@ const RootLayout: React.FC<{ children: React.ReactNode }> = async ({
   }
   return (
     <div className="flex justify-center">
-      <div className="auth max-w-xl w-full border-2 border-border p-8 rounded-xl mt-12">
+      <div className="auth max-w-xl w-full border border-border p-8 rounded-xl mt-12">
         <Image
           src={Logo}
           alt="Spark Royalty Logo"

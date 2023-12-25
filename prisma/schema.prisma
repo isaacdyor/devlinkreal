@@ -10,14 +10,21 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum RoleType {
+  FRONTEND
+  BACKEND
+  FULLSTACK
+  DESIGN
+}
+
 model User {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   email     String   @unique
-  name      String
-  password  String
-  role      String
+  firstName String
+  lastName  String
+  role      RoleType
   skills    String[]
   bio       String
   github    String?
@@ -31,7 +38,7 @@ model User {
   comments Comment[]
 }
 
-enum ProjectStatus {
+enum ProjectStatusType {
   PLANNING
   BUILDING
   COMPLETED
@@ -44,7 +51,7 @@ model Project {
   title      String
   description String
   repo      String?
-  status    ProjectStatus
+  status    ProjectStatusType
   image     String?
   techStack String[]
 

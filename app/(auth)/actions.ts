@@ -35,20 +35,11 @@ export const signUp = async (data: SignupInput) => {
     },
   });
 
-  // const { error } = await supabase.auth.signUp({
-  //   email: "efcisaac07@gmail.com",
-  //   password: "messiman07da",
-  //   options: {
-  //     emailRedirectTo: `${origin}/auth/callback`,
-  //   },
-  // });
-
   if (error) {
     return {
       error: error.message,
     };
   }
-  // TODO: return success message
 };
 
 export const forgotPassword = async (data: ForgotPasswordInput) => {
@@ -63,7 +54,6 @@ export const forgotPassword = async (data: ForgotPasswordInput) => {
       error: error.message,
     };
   }
-  // TODO: return success message
 };
 
 export const updatePassword = async (
