@@ -2,11 +2,14 @@ import { z } from "zod";
 import { RoleType } from "@prisma/client";
 
 export const newProfileSchema = z.object({
-  firstName: z.string(),
-  lastName: z.string(),
+  firstName: z.string().min(1),
+  lastName: z.string().min(1),
   role: z.nativeEnum(RoleType),
-  skills: z.array(z.string()),
-  bio: z.string(),
+  skills: z
+    .object({ name: z.string().min(1) })
+    .array()
+    .min(1),
+  bio: z.string().min(1),
   github: z.string(),
   linkedin: z.string(),
   website: z.string(),

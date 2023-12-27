@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/form";
 
 import { Input } from "@/components/ui/input";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useState } from "react";
@@ -34,19 +34,18 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+import { TrashIcon } from "@heroicons/react/24/outline";
+
 export type NewProfileInput = z.infer<typeof newProfileSchema>;
 
 export default function NewProfileForm() {
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
-
   const form = useForm<NewProfileInput>({
     resolver: zodResolver(newProfileSchema),
     defaultValues: {
       firstName: "",
       lastName: "",
       role: undefined,
-      skills: [],
+      skills: [{ name: "" }],
       bio: "",
       github: "",
       linkedin: "",
@@ -55,8 +54,15 @@ export default function NewProfileForm() {
     },
   });
 
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "skills",
+  });
+
+  const watchSkills = form.watch("skills");
+
   const onSubmit = async (data: NewProfileInput) => {
-    setSuccess("Check your email for further instructions");
+    // setSuccess("Check your email for further instructions");
     const result = await addProfile(data);
   };
 
@@ -121,16 +127,66 @@ export default function NewProfileForm() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="fullstack">Full Stack</SelectItem>
-                        <SelectItem value="frontend">Frontend</SelectItem>
-                        <SelectItem value="backend">Backend</SelectItem>
-                        <SelectItem value="design">Design</SelectItem>
+                        <SelectItem value="FULLSTACK">Full Stack</SelectItem>
+                        <SelectItem value="FRONTEND">Frontend</SelectItem>
+                        <SelectItem value="BACKEND">Backend</SelectItem>
+                        <SelectItem value="DESIGN">Design</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+              <FormLabel>Role</FormLabel>
+              <div className="grid grid-cols-2 gap-2">
+                {fields.map((field, index) => (
+                  <>
+                    <FormField
+                      control={form.control}
+                      name="skills"
+                      render={({ field }) => (
+                        <FormItem className="w-full">
+                          <div className="flex items-center relative group">
+                            <FormControl>
+                              <Input
+                                placeholder="Your skill"
+                                {...form.register(
+                                  `skills.${index}.name` as const
+                                )}
+                                onChange={(e) => {
+                                  const value = e.target.value;
+                                  const updatedFields = [...fields];
+                                  updatedFields[index].name = value;
+                                }}
+                              />
+                            </FormControl>
+
+                            <TrashIcon
+                              className="h-6 w-6 absolute right-1 group-hover:visible invisible hover:text-muted-foreground/50 hover:cursor-pointer text-muted-foreground/70"
+                              onClick={() => remove(index)}
+                            />
+                          </div>
+
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </>
+                ))}
+              </div>
+              {watchSkills.map((field, index) => (
+                <p>{field.name}</p>
+              ))}
+              {"hello" + fields.some((field) => !field.name)}
+              <Button
+                type="button"
+                // disabled if any of the previous fields are empty
+                disabled={fields.some((field) => !field.name)}
+                onClick={() => append({ name: "" })}
+                className="max-w-min"
+              >
+                Add Skill
+              </Button>
               <Button variant="default" className="w-full my-4" type="submit">
                 Submit
               </Button>
