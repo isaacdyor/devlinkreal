@@ -85,9 +85,7 @@ export default function NewProfileForm() {
                   name="firstName"
                   render={({ field }) => (
                     <FormItem className="w-full">
-                      <FormLabel className="text-muted-foreground">
-                        First name
-                      </FormLabel>
+                      <FormLabel className="">First name</FormLabel>
                       <FormControl>
                         <Input placeholder="Your first name" {...field} />
                       </FormControl>
@@ -100,9 +98,7 @@ export default function NewProfileForm() {
                   name="lastName"
                   render={({ field }) => (
                     <FormItem className="w-full">
-                      <FormLabel className="text-muted-foreground">
-                        Last name
-                      </FormLabel>
+                      <FormLabel className="">Last name</FormLabel>
                       <FormControl>
                         <Input placeholder="Your last name" {...field} />
                       </FormControl>
@@ -140,48 +136,45 @@ export default function NewProfileForm() {
               <FormLabel>Role</FormLabel>
               <div className="grid grid-cols-2 gap-2">
                 {fields.map((field, index) => (
-                  <>
-                    <FormField
-                      control={form.control}
-                      name="skills"
-                      render={({ field }) => (
-                        <FormItem className="w-full">
-                          <div className="flex items-center relative group">
-                            <FormControl>
-                              <Input
-                                placeholder="Your skill"
-                                {...form.register(
-                                  `skills.${index}.name` as const
-                                )}
-                                onChange={(e) => {
-                                  const value = e.target.value;
-                                  const updatedFields = [...fields];
-                                  updatedFields[index].name = value;
-                                }}
-                              />
-                            </FormControl>
-
-                            <TrashIcon
-                              className="h-6 w-6 absolute right-1 group-hover:visible invisible hover:text-muted-foreground/50 hover:cursor-pointer text-muted-foreground/70"
-                              onClick={() => remove(index)}
+                  <FormField
+                    control={form.control}
+                    name="skills"
+                    key={field.id}
+                    render={({ field }) => (
+                      <FormItem className="w-full">
+                        <div
+                          key={field.name}
+                          className="flex items-center relative group"
+                        >
+                          <FormControl>
+                            <Input
+                              placeholder="Your skill"
+                              className="group-hover:pr-8"
+                              {...form.register(
+                                `skills.${index}.name` as const
+                              )}
                             />
-                          </div>
+                          </FormControl>
+                          <TrashIcon
+                            className="h-6 w-6 absolute right-1 group-hover:visible invisible hover:text-muted-foreground/50 hover:cursor-pointer text-muted-foreground/70"
+                            onClick={() => remove(index)}
+                          />
+                        </div>
 
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </>
+                        {form.formState.errors.skills?.[index]?.name && (
+                          <p className="text-sm font-medium text-destructive">
+                            This can't be empty
+                          </p>
+                        )}
+                        {}
+                      </FormItem>
+                    )}
+                  />
                 ))}
               </div>
-              {watchSkills.map((field, index) => (
-                <p>{field.name}</p>
-              ))}
-              {"hello" + fields.some((field) => !field.name)}
               <Button
                 type="button"
-                // disabled if any of the previous fields are empty
-                disabled={fields.some((field) => !field.name)}
+                disabled={watchSkills.some((field) => !field.name)}
                 onClick={() => append({ name: "" })}
                 className="max-w-min"
               >

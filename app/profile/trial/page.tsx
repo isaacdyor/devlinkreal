@@ -11,9 +11,9 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { TrashIcon } from "@heroicons/react/24/outline";
 
 type FormValues = {
   test: {
@@ -55,34 +55,33 @@ export default function App() {
     <div>
       <Form {...form}>
         <form onSubmit={() => console.log("bang")}>
-          {fields.map((field, index) => {
-            return (
-              <div key={field.id}>
-                <FormField
-                  control={form.control}
-                  name="firstName"
-                  render={({ field }) => (
-                    <FormItem className="w-full">
-                      <FormLabel className="text-muted-foreground">
-                        First name
-                      </FormLabel>
-                      <FormControl>
-                        <Input placeholder="Your first name" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <Input
-                  placeholder="Your skill"
-                  {...form.register(`skills.${index}.name` as const)}
-                />
-                <button type="button" onClick={() => remove(index)}>
-                  Remove
-                </button>
-              </div>
-            );
-          })}
+          {fields.map((field, index) => (
+            <FormField
+              control={form.control}
+              name="skills"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <div
+                    key={field.name}
+                    className="flex items-center relative group"
+                  >
+                    <FormControl>
+                      <Input
+                        placeholder="Your skill"
+                        {...form.register(`skills.${index}.name` as const)}
+                      />
+                    </FormControl>
+                    <TrashIcon
+                      className="h-6 w-6 absolute right-1 group-hover:visible invisible hover:text-muted-foreground/50 hover:cursor-pointer text-muted-foreground/70"
+                      onClick={() => remove(index)}
+                    />
+                    <FormMessage />
+                  </div>
+                </FormItem>
+              )}
+            />
+          ))}
+
           <button type="button" onClick={() => append({ name: "" })}>
             Append
           </button>
