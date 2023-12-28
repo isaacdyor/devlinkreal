@@ -9,7 +9,7 @@ export const newProfileSchema = z.object({
     .object({ name: z.string().min(1) })
     .array()
     .min(1),
-  bio: z.string().min(1),
+  bio: z.string().min(100).max(500),
   github: z.string(),
   linkedin: z.string(),
   website: z.string(),

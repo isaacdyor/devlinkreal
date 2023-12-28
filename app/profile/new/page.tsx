@@ -34,6 +34,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+import { Textarea } from "@/components/ui/textarea";
+
 import { TrashIcon } from "@heroicons/react/24/outline";
 
 export type NewProfileInput = z.infer<typeof newProfileSchema>;
@@ -77,7 +79,7 @@ export default function NewProfileForm() {
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="flex-1 flex flex-col w-full justify-center gap-2 text-muted-foreground"
+              className="flex-1 flex flex-col w-full justify-center gap-6 text-muted-foreground"
             >
               <div className="flex flex-row gap-4">
                 <FormField
@@ -133,53 +135,76 @@ export default function NewProfileForm() {
                   </FormItem>
                 )}
               />
-              <FormLabel>Role</FormLabel>
-              <div className="grid grid-cols-2 gap-2">
-                {fields.map((field, index) => (
-                  <FormField
-                    control={form.control}
-                    name="skills"
-                    key={field.id}
-                    render={({ field }) => (
-                      <FormItem className="w-full">
-                        <div
-                          key={field.name}
-                          className="flex items-center relative group"
-                        >
-                          <FormControl>
-                            <Input
-                              placeholder="Your skill"
-                              className="group-hover:pr-8"
-                              {...form.register(
-                                `skills.${index}.name` as const
-                              )}
-                            />
-                          </FormControl>
-                          <TrashIcon
-                            className="h-6 w-6 absolute right-1 group-hover:visible invisible hover:text-muted-foreground/50 hover:cursor-pointer text-muted-foreground/70"
-                            onClick={() => remove(index)}
-                          />
-                        </div>
 
-                        {form.formState.errors.skills?.[index]?.name && (
-                          <p className="text-sm font-medium text-destructive">
-                            This can't be empty
-                          </p>
-                        )}
-                        {}
-                      </FormItem>
-                    )}
-                  />
-                ))}
-              </div>
-              <Button
-                type="button"
-                disabled={watchSkills.some((field) => !field.name)}
-                onClick={() => append({ name: "" })}
-                className="max-w-min"
-              >
-                Add Skill
-              </Button>
+              <FormField
+                control={form.control}
+                name="skills"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Skills</FormLabel>
+                    <div className="grid grid-cols-2 gap-2">
+                      {fields.map((field, index) => (
+                        <div>
+                          <div
+                            key={field.name}
+                            className="flex items-center relative group"
+                          >
+                            <FormControl>
+                              <Input
+                                placeholder="Your skill"
+                                className="group-hover:pr-8"
+                                {...form.register(
+                                  `skills.${index}.name` as const
+                                )}
+                              />
+                            </FormControl>
+                            <TrashIcon
+                              className="h-6 w-6 absolute right-1 group-hover:visible invisible hover:text-muted-foreground/50 hover:cursor-pointer text-muted-foreground/70"
+                              onClick={() => remove(index)}
+                            />
+                          </div>
+
+                          {form.formState.errors.skills?.[index]?.name && (
+                            <p className="text-sm font-medium text-destructive">
+                              This can't be empty
+                            </p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                    <Button
+                      type="button"
+                      disabled={watchSkills.some((field) => !field.name)}
+                      onClick={() => append({ name: "" })}
+                      className="max-w-min"
+                    >
+                      Add Skill
+                    </Button>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="bio"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Bio</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Tell us a little bit about yourself"
+                        className="resize-none"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      You can <span>@mention</span> other users and
+                      organizations.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <Button variant="default" className="w-full my-4" type="submit">
                 Submit
               </Button>
