@@ -13,7 +13,15 @@ const AuthComponent = async () => {
   } = await supabase.auth.getUser();
 
   return user ? (
-    <ProfileButton user={user!} />
+    <>
+      <Link
+        href="/profile/new"
+        className={`inline-flex h-10 w-full items-center md:w-auto rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground`}
+      >
+        Create Profile
+      </Link>
+      <ProfileButton user={user!} />
+    </>
   ) : (
     <>
       <Link href={"/login"} className="md:px-1 w-full md:w-auto">

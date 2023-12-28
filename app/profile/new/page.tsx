@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -15,8 +14,6 @@ import { Input } from "@/components/ui/input";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useState } from "react";
-import Link from "next/link";
 import { newProfileSchema } from "@/validators/newProfile";
 import { addProfile } from "../actions";
 import {
@@ -37,6 +34,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 
 import { TrashIcon } from "@heroicons/react/24/outline";
+import { useRouter } from "next/navigation";
 
 export type NewProfileInput = z.infer<typeof newProfileSchema>;
 
@@ -63,17 +61,22 @@ export default function NewProfileForm() {
 
   const watchSkills = form.watch("skills");
 
+  const router = useRouter();
+
   const onSubmit = async (data: NewProfileInput) => {
-    // setSuccess("Check your email for further instructions");
-    const result = await addProfile(data);
+    const result = await addProfile(data)
+      .then(() => router.push("/profile"))
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
   return (
-    <div className="w-screen flex justify-center pt-8">
+    <div className="w-screen flex justify-center p-8">
       <Card className="max-w-2xl w-full border border-border">
         <CardHeader>
-          <CardTitle>Register</CardTitle>
-          <CardDescription>Start the journey with us today.</CardDescription>
+          <CardTitle>Create Profile</CardTitle>
+          <CardDescription>Yabba dabba doo</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -144,11 +147,8 @@ export default function NewProfileForm() {
                     <FormLabel>Skills</FormLabel>
                     <div className="grid grid-cols-2 gap-2">
                       {fields.map((field, index) => (
-                        <div>
-                          <div
-                            key={field.name}
-                            className="flex items-center relative group"
-                          >
+                        <div key={field.name}>
+                          <div className="flex items-center relative group">
                             <FormControl>
                               <Input
                                 placeholder="Your skill"
@@ -197,10 +197,67 @@ export default function NewProfileForm() {
                         {...field}
                       />
                     </FormControl>
-                    <FormDescription>
-                      You can <span>@mention</span> other users and
-                      organizations.
-                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="flex flex-row gap-4">
+                <FormField
+                  control={form.control}
+                  name="github"
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <FormLabel>Github Username</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Your github username" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="linkedin"
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <FormLabel>Linkedin Username</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Your linkedin username"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <FormField
+                control={form.control}
+                name="website"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Website</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Your website url" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="profilePic"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Profile Picture</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="file"
+                        placeholder="Your website url"
+                        {...field}
+                      />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}

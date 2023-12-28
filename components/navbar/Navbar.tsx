@@ -19,7 +19,7 @@ const Navbar: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   };
 
   return (
-    <div className="flex items-center justify-between p-1 border-b border-b-border">
+    <div className="flex items-center justify-between p-1 border-b border-b-border h-16">
       <Link href={"/"} className="shrink-0 px-4">
         <Image
           src={Logo}
@@ -52,7 +52,7 @@ const Navbar: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         <div className="h-full w-full bg-background/60 md:hidden" />
       </div>
 
-      <button onClick={toggleMenu} className="md:hidden">
+      <button onClick={toggleMenu} className="md:hidden mr-4">
         {menuOpen ? (
           <XMarkIcon className="h-7 w-7" />
         ) : (

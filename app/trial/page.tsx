@@ -5,7 +5,7 @@ export default async function Index() {
         Spark Royalty
       </h1>
       <p className="mt-3 text-2xl text-center text-accent-foreground">
-        Coming Soon
+        Coming poop
       </p>
     </div>
   );

@@ -14,10 +14,15 @@ export const addProfile = async (data: NewProfileInput) => {
   if (!email) {
     throw new Error("User not found");
   }
+
+  let skillsList = data.skills.map((skill) => skill.name);
+
   try {
     const user = await prisma.user.create({
       data: {
         ...data,
+        profilePic: "https://i.imgur.com/2KZt3YF.png",
+        skills: skillsList,
         email: email,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
