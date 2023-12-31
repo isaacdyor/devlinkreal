@@ -1,6 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createClient } from "@/utils/supabase/middleware";
-import prisma from "@/lib/prisma";
 
 export async function middleware(request: NextRequest) {
   const { supabase, response } = createClient(request);
