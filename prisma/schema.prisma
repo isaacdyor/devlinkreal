@@ -17,7 +17,6 @@ enum RoleType {
 model Profile {
   id        String   @id @db.Uuid
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
   email     String   @unique
   firstName String   @map("first_name")
   lastName  String   @map("last_name")
@@ -46,7 +45,6 @@ enum ProjectStatusType {
 model Project {
   id        String   @id @db.Uuid @default(uuid())
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
   title      String
   description String
   repo      String?
@@ -70,7 +68,6 @@ model Project {
 model Comment {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
   content   String
 
   profileId String  @map("profile_id") @db.Uuid
