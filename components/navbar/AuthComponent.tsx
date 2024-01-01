@@ -4,7 +4,6 @@ import { cookies } from "next/headers";
 import ProfileButton from "./ProfileButton";
 import Link from "next/link";
 import { Button } from "../ui/button";
-import prisma from "@/lib/prisma";
 
 const AuthComponent = async () => {
   const supabase = createClient(cookies());
@@ -13,11 +12,10 @@ const AuthComponent = async () => {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const profile = await prisma.user.findUnique({
-    where: {
-      email: user?.email,
-    },
-  });
+  const { data: profile, error } = await supabase
+    .from("profile")
+    .select()
+    .eq("id", user?.id);
 
   return user ? (
     <>
